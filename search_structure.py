@@ -27,7 +27,7 @@ def get_max_idx(indeces, all_policies, s):
 def grouper(lst, k=3):
     return [lst[n:n + k] for n, i in enumerate(lst) if n % k == 0]
 
-def management():
+def doSearch():
     policies = ['FlipLR', 'FlipUD', 'AutoContrast', 'Equalize', 'Invert', 'Rotate', 'Posterize', 'CropBilinear',
                 'Solarize', 'Color', 'Contrast', 'Brightness', 'Sharpness', 'ShearX', 'ShearY', 'TranslateX',
                 'TranslateY',
@@ -82,5 +82,5 @@ def management():
     return saved_policies
 
 
-policies = management()
+policies = doSearch()
 save_variables("saved_policies", policies=policies)
