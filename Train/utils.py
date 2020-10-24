@@ -121,3 +121,41 @@ def format_time(seconds):
     if f == '':
         f = '0ms'
     return f
+
+def get_gpu_memory_map():
+    import subprocess
+
+    result_used = subprocess.check_output(
+        [
+            'nvidia-smi', '--query-gpu=memory.used',
+            '--format=csv,nounits,noheader'  # memory.total,memory.free
+        ])
+    result_free = subprocess.check_output(
+        [
+            'nvidia-smi', '--query-gpu=memory.free',
+            '--format=csv,nounits,noheader'  # memory.total,memory.free
+        ])
+    result_total = subprocess.check_output(
+        [
+            'nvidia-smi', '--query-gpu=memory.total',
+            '--format=csv,nounits,noheader'  # memory.total,memory.free
+        ])
+    # Convert lines into a dictionary
+    # print(result_total)
+    gpu_memory_used = [int(x) for x in result_used.strip().split('\n')]
+    gpu_memory_free = [int(x) for x in result_free.strip().split('\n')]
+    gpu_memory_total = [int(x) for x in result_total.strip().split('\n')]
+    gpu_memory_map_used = dict(zip(range(len(gpu_memory_used)), gpu_memory_used))
+    gpu_memory_map_free = dict(zip(range(len(gpu_memory_free)), gpu_memory_free))
+    gpu_memory_map_total = dict(zip(range(len(gpu_memory_total)), gpu_memory_total))
+    return gpu_memory_map_used, gpu_memory_map_free, gpu_memory_map_total
+
+def find_gpu():
+    _, gpu_memory_map_free, _ = get_gpu_memory_map()
+    max = -1
+    max_id = -1
+    for k in range(len(gpu_memory_map_free)):
+        if gpu_memory_map_free[k] >= max:
+            max = gpu_memory_map_free[k]
+            max_id = k
+    return max_id

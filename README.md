@@ -15,7 +15,12 @@ cd Search
 python main.py --data='Datasets' --lr=0.1 --network=1 --last_layer=10 --dataset=cifar10 --pickle_path='saved_pickle'
 ```
 ### Train
+For the traing enter the following code in a python 2 environment with torch library enabled. There are multiple options added to the available options for the search. For the `--mode`, we can use `'Manual'`,`'AutoAug'`, and `'GAutoAug'`. The  `--resume=0`, `--smallprint=1` the values to be 0, 1.
 
+```
+cd Train
+python main.py --data='Datasets' --lr=0.1  --network=1 --last_layer=10 --dataset='cifar10' --mode='GAutoAug' --resume=0 --smallprint=1 --ckptfolder='ckptfolder/' --ckptname='test' --end_epoch=200
+```
 
 #### Note for Tiny Imagenet
 For Tiny Imagenet to be read by our importer `folder2labels-py2` which is a pickle variable should be copied into 'tiny-imagenet-200' folder. In case python 3 is used `folder2labels` should be copied. 

@@ -24,19 +24,18 @@ networks_names = (
 'SENet18', 'ShuffleNetG2', 'ShuffleNetV2', 'VGG')
 
 # for server, files comment out, smallprint=1, nodeletion=0
-parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
+parser = argparse.ArgumentParser(description='Training')
 parser.add_argument('--data', default='/common/users/an499/Datasets/', type=str, help='data root directory')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
-parser.add_argument('--resume', default=0, type=int, help='resume from checkpoint')
-parser.add_argument('--network', default=9, type=int, help='Which network to use, 0-11')
+parser.add_argument('--network', default=7, type=int, help='Which network to use, 0-11')
 parser.add_argument('--last_layer', default=200, type=int, help='The size of the last layer, 0-11')
-parser.add_argument('--dataset', default="tiny", type=str, help='The dataset being used, 0-2')
-parser.add_argument('--mode', default="OriginalAutoAug", type=str, help='The that we want to use.')
-parser.add_argument('--smallprint', default=1, type=int, help='The that we want to use.')
+parser.add_argument('--dataset', default="cifar10", type=str, help='The dataset being used, cifar10, cifar100, tiny, SVHN')
+parser.add_argument('--mode', default="GAutoAug", type=str, help='The training mode, Manual, AutoAug, GAutoAug.')
+parser.add_argument('--resume', default=1, type=int, help='resume from checkpoint')
+parser.add_argument('--smallprint', default=0, type=int, help='Produce detailed output (0) or small output (1).')
 parser.add_argument('--ckptfolder', default="ckptfolder/", type=str, help='The location of the checkpoint folder.')
 parser.add_argument('--ckptname', default="test", type=str, help='The checkpoint name.')
-parser.add_argument('--ckptjumper', default="test", type=str, help='The checkpoint name.')
-parser.add_argument('--end_epoch', default=200, type=int, help='The size of the last layer, 0-11')
+parser.add_argument('--end_epoch', default=200, type=int, help='The number of epochs')
 
 args = parser.parse_args()
 
@@ -59,40 +58,40 @@ augmentation = CA.Original()
 if args.dataset == "tiny":
     if args.mode == "Manual":
         augmentation = CA.Manual()
-    elif args.mode == "OriginalAugAutoAug":
-        augmentation = CA.tiny_OriginalAugAutoAug()
-    elif args.mode == "OriginalGAutoAug":
-        augmentation = CA.tiny_OriginalGAutoAug(network=args.network)
+    elif args.mode == "AutoAug":
+        augmentation = CA.tiny_AutoAug()
+    elif args.mode == "GAutoAug":
+        augmentation = CA.tiny_GAutoAug(network=args.network)
     else:
         print("Mode is not correct!!")
 
 elif args.dataset == "cifar10":
     if args.mode == "Manual":
         augmentation = CA.Manual()
-    elif args.mode == "OriginalAugAutoAug":
-        augmentation = CA.cifar_OriginalAugAutoAug()
-    elif args.mode == "OriginalGAutoAug":
-        augmentation = CA.cifar_OriginalGAutoAug(mode="CIFAR10", network=args.network)
+    elif args.mode == "AutoAug":
+        augmentation = CA.cifar_AutoAug()
+    elif args.mode == "GAutoAug":
+        augmentation = CA.cifar_GAutoAug(mode="CIFAR10", network=args.network)
     else:
         print("Mode is not correct!!")
 
 elif args.dataset == "cifar100":
     if args.mode == "Manual":
         augmentation = CA.Manual()
-    elif args.mode == "OriginalAugAutoAug":
-        augmentation = CA.cifar_OriginalAugAutoAug()
-    elif args.mode == "OriginalGAutoAug":
-        augmentation = CA.cifar_OriginalGAutoAug(mode="CIFAR100", network=args.network)
+    elif args.mode == "AutoAug":
+        augmentation = CA.cifar_AutoAug()
+    elif args.mode == "GAutoAug":
+        augmentation = CA.cifar_GAutoAug(mode="CIFAR100", network=args.network)
     else:
         print("Mode is not correct!!")
 
 elif args.dataset == "SVHN":
     if args.mode == "Manual":
         augmentation = CA.Manual()
-    elif args.mode == "OriginalAugAutoAug":
-        augmentation = CA.svhn_OriginalAugAutoAug()
-    elif args.mode == "OriginalGAutoAug":
-        augmentation = CA.svhn_OriginalGAutoAug(network=args.network)
+    elif args.mode == "AutoAug":
+        augmentation = CA.svhn_AutoAug()
+    elif args.mode == "GAutoAug":
+        augmentation = CA.svhn_GAutoAug(network=args.network)
     else:
         print("Mode is not correct!!")
 else:
@@ -244,7 +243,7 @@ def test(epoch):
 
     # Save checkpoint.
     acc = 100. * correct / total
-    if True:
+    if acc > best_acc:
         print('Saving..')
         state = {
             'net': net.state_dict(),
@@ -255,8 +254,7 @@ def test(epoch):
             os.mkdir(checkpoint_folder + 'checkpoint')
 
         torch.save(state, checkpoint_primary)
-        if acc > best_acc:
-            best_acc = acc
+        best_acc = acc
     print("Accuracy and best acc are:", acc, best_acc)
     return acc, best_acc
 

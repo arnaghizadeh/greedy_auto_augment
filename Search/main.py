@@ -16,11 +16,6 @@ import importer.svhn as svhn
 from utils import find_gpu
 import numpy as np
 
-
-
-
-
-
 parser = argparse.ArgumentParser(description='Searching')
 parser.add_argument('--data', default='/common/users/an499/Datasets/', type=str, help='data root directory')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
