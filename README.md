@@ -15,7 +15,7 @@ cd Search
 python main.py --data='Datasets' --lr=0.1 --network=1 --last_layer=10 --dataset=cifar10 --pickle_path='saved_pickle'
 ```
 ### Train
-For the traing enter the following code in a python 2 environment with torch library enabled. There are multiple options added to the available options for the search. For the `--mode`, we can use `'Manual'`,`'AutoAug'`, and `'GAutoAug'`. The  `--resume=0`, `--smallprint=1` the values to be 0, 1.
+For the traing enter the following code in a python 2 environment with torch library enabled. There are multiple options added to the available options for the search. For the `--mode`, we can use `'Manual'`,`'AutoAug'`, and `'GAutoAug'`. The  `--resume`, `--smallprint` can take values of 0, 1.
 
 ```
 cd Train
